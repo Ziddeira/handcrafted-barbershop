@@ -7,7 +7,7 @@ Site de uma página, responsivo, em inglês (público americano), com agendament
 ## Stack
 
 - **Frontend:** HTML semântico + CSS puro + JavaScript (ES modules), sem build step.
-- **Backend:** Node.js (≥ 18) **sem dependências** — servidor HTTP nativo (`server.js`).
+- **Backend:** Node.js 22 **sem dependências**: Vercel Functions (`api/`) e servidor HTTP nativo para uso local (`server.js`), com a mesma lógica em `lib/`.
 - **Testes:** `node:test` (horários + API).
 
 ## Como rodar
@@ -15,7 +15,7 @@ Site de uma página, responsivo, em inglês (público americano), com agendament
 ```bash
 npm start          # http://localhost:3000
 npm run dev        # reinicia ao salvar
-npm test           # 17 testes
+npm test           # 27 testes
 ```
 
 Variáveis de ambiente (opcionais):
@@ -23,7 +23,8 @@ Variáveis de ambiente (opcionais):
 | Variável | Uso |
 | --- | --- |
 | `PORT` | Porta do servidor (padrão `3000`) |
-| `DATA_DIR` | Pasta onde as mensagens do formulário são salvas (padrão `./data`) |
+| `DATA_DIR` | Pasta onde as mensagens do formulário são salvas localmente (padrão `./data`) |
+| `KV_REST_API_URL` / `KV_REST_API_TOKEN` | Redis (Upstash) para guardar as mensagens. Necessário na Vercel |
 | `ADMIN_TOKEN` | Libera `GET /api/messages` com `Authorization: Bearer <token>` |
 | `CONTACT_WEBHOOK_URL` | Encaminha cada mensagem para Slack/Discord/Zapier (campo `text`) |
 
@@ -42,7 +43,10 @@ O servidor também envia cabeçalhos de segurança (CSP, nosniff, etc.), ETag/ca
 ## Estrutura
 
 ```
-server.js                 Servidor + API
+server.js                 Servidor local (estático + API)
+vercel.json               Configuração da Vercel
+api/                      Vercel Functions
+lib/                      Lógica da API, armazenamento e cabeçalhos (compartilhados)
 public/
   index.html              Página principal (SEO, Open Graph, JSON-LD BarberShop)
   404.html
@@ -61,7 +65,44 @@ test/                     Testes
 3. **Avaliações.** Os três depoimentos foram retraduzidos para o inglês a partir da versão em português do Google. Vale trocar pelo texto original em inglês de cada review.
 4. **Foto do interior.** Confirme que a foto do salão (teto com luzes hexagonais) é mesmo da unidade de Millbrae.
 
-## Deploy
+## Deploy na Vercel
 
-- **Com backend (recomendado):** qualquer host Node — Render, Railway, Fly.io, um VPS — com `npm start`. Use um disco persistente para `DATA_DIR`, ou configure `CONTACT_WEBHOOK_URL`.
-- **Só estático:** a pasta `public/` funciona sozinha (Netlify, GitHub Pages, Vercel). Status e horários continuam funcionando; o formulário mostra a mensagem de "ligue para nós" caso não haja backend.
+O projeto já está pronto para a Vercel (`vercel.json` + funções em `api/`):
+
+- O site estático é servido a partir de `public/`.
+- `api/status.js`, `api/info.js`, `api/contact.js` e `api/messages.js` viram Vercel Functions (Node 22). Elas usam o mesmo código de `lib/api.js` que roda no servidor local.
+- Os cabeçalhos de segurança do `vercel.json` são os mesmos do servidor local (um teste garante isso).
+
+### Passo a passo
+
+1. Acesse **https://vercel.com/new** e entre com o GitHub.
+2. Importe o repositório **Ziddeira/handcrafted-barbershop**.
+3. Em *Framework Preset* deixe **Other**. Não precisa mexer em build/output: o `vercel.json` já define tudo.
+4. Clique em **Deploy**. A cada `git push` a Vercel publica de novo sozinha (a branch principal vira produção; as outras viram links de preview).
+
+### Formulário de contato na Vercel
+
+O disco da Vercel é somente leitura, então as mensagens precisam de um destino. Configure em *Project → Settings → Environment Variables* pelo menos uma das opções:
+
+| Opção | Variáveis |
+| --- | --- |
+| **Banco Redis (recomendado)**: em *Storage*, adicione **Upstash Redis** pelo Marketplace. As variáveis são criadas automaticamente | `KV_REST_API_URL` + `KV_REST_API_TOKEN` (ou `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`) |
+| **Aviso no Slack/Discord/Zapier** | `CONTACT_WEBHOOK_URL` |
+| **Ler as mensagens** em `GET /api/messages` (exige o Redis) | `ADMIN_TOKEN` |
+
+Sem nenhum destino configurado, o formulário responde "Online messages aren't available right now. Please call us at (650) 763-1332." e nenhuma mensagem se perde em silêncio. Depois de adicionar variáveis, faça um *Redeploy*.
+
+Para ler as mensagens:
+
+```bash
+curl -H "Authorization: Bearer SEU_ADMIN_TOKEN" https://SEU-SITE.vercel.app/api/messages
+```
+
+### Domínio próprio
+
+Em *Project → Settings → Domains*, adicione o domínio (ex.: `handcraftedbarbershop.com`) e siga as instruções de DNS.
+
+## Outras hospedagens
+
+- **Qualquer host Node** (Render, Railway, Fly.io, VPS): `npm start`. As mensagens vão para `./data/messages.jsonl` (ou para o Redis/webhook, se configurados).
+- **Só estático** (Netlify, GitHub Pages): publique a pasta `public/`. O formulário mostra a mensagem de "ligue para nós".

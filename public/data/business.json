@@ -1,0 +1,26 @@
+{
+  "name": "Handcrafted The Barbershop",
+  "phone": "+1 650-763-1332",
+  "phoneHref": "tel:+16507631332",
+  "bookingUrl": "https://handcrafted1336.booksy.com",
+  "address": {
+    "street": "1336 El Camino Real",
+    "city": "Millbrae",
+    "region": "CA",
+    "postalCode": "94030",
+    "country": "US"
+  },
+  "geo": { "lat": 37.60944, "lng": -122.40031, "plusCode": "JH5X+QV Millbrae, CA" },
+  "rating": { "value": 4.7, "count": 112, "source": "Google" },
+  "timezone": "America/Los_Angeles",
+  "hours": {
+    "_note": "24h format, keys 0=Sunday … 6=Saturday. Closing time 9 PM is confirmed; opening times must be confirmed with the shop. Use null for closed days.",
+    "0": { "open": "09:00", "close": "21:00" },
+    "1": { "open": "09:00", "close": "21:00" },
+    "2": { "open": "09:00", "close": "21:00" },
+    "3": { "open": "09:00", "close": "21:00" },
+    "4": { "open": "09:00", "close": "21:00" },
+    "5": { "open": "09:00", "close": "21:00" },
+    "6": { "open": "09:00", "close": "21:00" }
+  }
+}

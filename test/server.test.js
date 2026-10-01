@@ -4,7 +4,8 @@ import http from 'node:http';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { createApp, validateContact } from '../server.js';
+import { createApp } from '../server.js';
+import { validateContact } from '../lib/api.js';
 
 let server;
 let base;
