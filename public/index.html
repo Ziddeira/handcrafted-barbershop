@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700&family=Yellowtail&display=swap">
   <link rel="stylesheet" href="/css/styles.css">
-  <link rel="preload" as="image" href="/assets/img/interior.webp" type="image/webp">
+  <link rel="preload" as="image" type="image/webp" imagesrcset="/assets/img/hero/interior-960.webp 960w, /assets/img/hero/interior-1440.webp 1440w, /assets/img/hero/interior-1920.webp 1920w, /assets/img/hero/interior-2880.webp 2880w, /assets/img/hero/interior-3840.webp 3840w" imagesizes="(max-aspect-ratio: 3/4) 75vh, 100vw" fetchpriority="high">
 
   <script type="application/ld+json">
   {
@@ -99,8 +99,12 @@
     <!-- HERO -->
     <section class="hero" id="top">
       <picture class="hero-media">
-        <source srcset="/assets/img/interior.webp" type="image/webp">
-        <img src="/assets/img/interior.jpg" alt="Inside Handcrafted The Barbershop: leather barber chairs under a glowing hexagon light ceiling" width="896" height="1195" fetchpriority="high">
+        <!-- 4K hero (AI-upscaled to 3840px wide). Browsers pick the smallest file that is sharp on the visitor's screen. -->
+        <source type="image/webp" sizes="(max-aspect-ratio: 3/4) 75vh, 100vw"
+          srcset="/assets/img/hero/interior-960.webp 960w, /assets/img/hero/interior-1440.webp 1440w, /assets/img/hero/interior-1920.webp 1920w, /assets/img/hero/interior-2880.webp 2880w, /assets/img/hero/interior-3840.webp 3840w">
+        <img src="/assets/img/hero/interior-1920.jpg" sizes="(max-aspect-ratio: 3/4) 75vh, 100vw"
+          srcset="/assets/img/hero/interior-960.jpg 960w, /assets/img/hero/interior-1440.jpg 1440w, /assets/img/hero/interior-1920.jpg 1920w, /assets/img/hero/interior-2880.jpg 2880w, /assets/img/hero/interior-3840.jpg 3840w"
+          alt="Inside Handcrafted The Barbershop: leather barber chairs under a glowing hexagon light ceiling" width="3840" height="5121" fetchpriority="high" decoding="async">
       </picture>
       <div class="hero-overlay" aria-hidden="true"></div>
 
@@ -268,7 +272,7 @@
             </picture>
             <span class="gallery-caption">Skin fade</span>
           </button>
-          <button class="gallery-item reveal" type="button" data-lightbox data-full="/assets/img/interior.jpg">
+          <button class="gallery-item reveal" type="button" data-lightbox data-full="/assets/img/hero/interior-1920.jpg">
             <picture>
               <source srcset="/assets/img/interior.webp" type="image/webp">
               <img src="/assets/img/interior.jpg" alt="Barbershop interior with tufted leather chairs and a hexagon LED ceiling" width="896" height="1195" loading="lazy">
