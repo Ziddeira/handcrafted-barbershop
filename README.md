@@ -7,7 +7,7 @@ Site de uma página, responsivo, em inglês (público americano), com agendament
 ## Stack
 
 - **Frontend:** HTML semântico + CSS puro + JavaScript (ES modules), sem build step.
-- **Backend:** Node.js 22 **sem dependências**: Vercel Functions (`api/`) e servidor HTTP nativo para uso local (`server.js`), com a mesma lógica em `lib/`.
+- **Backend:** Node.js 22 **sem dependências**: Vercel Functions (`api/`) e servidor HTTP nativo para uso local (`dev-server.js`), com a mesma lógica em `lib/`.
 - **Testes:** `node:test` (horários + API).
 
 ## Como rodar
@@ -43,7 +43,7 @@ O servidor também envia cabeçalhos de segurança (CSP, nosniff, etc.), ETag/ca
 ## Estrutura
 
 ```
-server.js                 Servidor local (estático + API)
+dev-server.js             Servidor local (estático + API)
 vercel.json               Configuração da Vercel
 api/                      Vercel Functions
 lib/                      Lógica da API, armazenamento e cabeçalhos (compartilhados)
@@ -77,7 +77,7 @@ O projeto já está pronto para a Vercel (`vercel.json` + funções em `api/`):
 
 1. Acesse **https://vercel.com/new** e entre com o GitHub.
 2. Importe o repositório **Ziddeira/handcrafted-barbershop**.
-3. Em *Framework Preset* deixe **Other**. Não precisa mexer em build/output: o `vercel.json` já define tudo.
+3. Em *Framework Preset* escolha **Other** e deixe *Root Directory* e *Output Directory* vazios. O `vercel.json` já define tudo (e sobrepõe o preset, se a Vercel sugerir outro).
 4. Clique em **Deploy**. A cada `git push` a Vercel publica de novo sozinha (a branch principal vira produção; as outras viram links de preview).
 
 ### Formulário de contato na Vercel

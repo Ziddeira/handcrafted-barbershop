@@ -4,7 +4,7 @@ import http from 'node:http';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { createApp } from '../server.js';
+import { createApp } from '../dev-server.js';
 import { validateContact } from '../lib/api.js';
 
 let server;
@@ -49,7 +49,7 @@ test('returns 404 page for unknown routes', async () => {
 });
 
 test('blocks path traversal', async () => {
-  const res = await fetch(`${base}/..%2fserver.js`);
+  const res = await fetch(`${base}/..%2fdev-server.js`);
   assert.notEqual(res.status, 200);
 });
 

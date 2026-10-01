@@ -1,4 +1,5 @@
 // Handcrafted The Barbershop — zero-dependency Node.js server for local use or any Node host.
+// (Not named server.js on purpose: that name makes Vercel auto-detect its "Node.js" preset.)
 // Serves the static site from ./public and the same /api handlers that run on Vercel.
 
 import http from 'node:http';
